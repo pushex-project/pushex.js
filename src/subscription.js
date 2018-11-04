@@ -31,14 +31,14 @@ export class Subscription {
   // private
 
   _handleMessage({ data, event }) {
-    this._runBindings(event, data)
-    this._runBindings("*", data)
+    this._runBindings(event, [event, data])
+    this._runBindings("*", [event, data])
   }
 
-  _runBindings(eventName, data) {
+  _runBindings(eventName, args) {
     const bindings = this.bindings[eventName] || []
     bindings.forEach(bindingFn => {
-      this._invokeFunctionWithAsyncErrorHandling(bindingFn, [data])
+      this._invokeFunctionWithAsyncErrorHandling(bindingFn, args)
     })
   }
 
