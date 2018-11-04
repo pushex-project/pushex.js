@@ -9,7 +9,7 @@ export class Subscription {
     if (!this.channel) {
       this.channel = this.pushEx.getSocket().channel(this.channelName)
       this.channel.join()
-      this.channel.on('msg', this._handleMessage.bind(this))
+      this.channel.on("msg", this._handleMessage.bind(this))
       this.channel.rejoinTimer = new this.channel.rejoinTimer.constructor(
         () => this.channel.rejoinUntilConnected(),
         reconnectAlgorithm
@@ -24,7 +24,7 @@ export class Subscription {
     this.bindings[eventName].push(fn)
 
     return () => {
-      this.bindings[eventName] = this.bindings[eventName].filter((testFn) => testFn !== fn)
+      this.bindings[eventName] = this.bindings[eventName].filter(testFn => testFn !== fn)
     }
   }
 
@@ -32,12 +32,12 @@ export class Subscription {
 
   _handleMessage({ data, event }) {
     this._runBindings(event, data)
-    this._runBindings('*', data)
+    this._runBindings("*", data)
   }
 
   _runBindings(eventName, data) {
     const bindings = this.bindings[eventName] || []
-    bindings.forEach((bindingFn) => {
+    bindings.forEach(bindingFn => {
       this._invokeFunctionWithAsyncErrorHandling(bindingFn, [data])
     })
   }

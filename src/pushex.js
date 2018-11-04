@@ -1,9 +1,9 @@
-import { Socket } from 'phoenix'
-import { Subscription } from './subscription'
+import { Socket } from "phoenix"
+import { Subscription } from "./subscription"
 
-const NO_OP = () => {};
+const NO_OP = () => {}
 
-const DEFAULT_SOCKET_RECONNECT_ALGORITHM = (tries) => {
+const DEFAULT_SOCKET_RECONNECT_ALGORITHM = tries => {
   return [3000, 6000, 10000, 20000][tries - 1] || 30000
 }
 
@@ -31,11 +31,11 @@ export class Pushex {
   }
 
   disconnect() {
-    this.socket.realDisconnect();
+    this.socket.realDisconnect()
   }
 
   resetParams() {
-    return this.getParams().then((params) => {
+    return this.getParams().then(params => {
       this.socket.params = params
       return this
     })
@@ -47,7 +47,9 @@ export class Pushex {
       this.subscriptions[channelName] = subscription
     }
 
-    return this.subscriptions[channelName].setup({ reconnectAlgorithm: this.channelReconnectAlgorithm })
+    return this.subscriptions[channelName].setup({
+      reconnectAlgorithm: this.channelReconnectAlgorithm
+    })
   }
 
   getSocket() {
@@ -57,16 +59,18 @@ export class Pushex {
   // private
 
   _setupSocket(url) {
-    this.socket = new Socket(url, { reconnectAfterMs: this.reconnectAlgorithm })
-    implementPhoenixBugfix(this.socket);
+    this.socket = new Socket(url, {
+      reconnectAfterMs: this.reconnectAlgorithm
+    })
+    implementPhoenixBugfix(this.socket)
 
     this.socket.onOpen(() => {
       this.onConnect(this)
-    });
+    })
 
     this.socket.onError(() => {
       this.onConnectionError(this)
-    });
+    })
   }
 }
 
@@ -76,19 +80,19 @@ function implementPhoenixBugfix(socket) {
 
   socket.disconnect = function teardown(callback, code, reason) {
     if (this.conn) {
-      this.conn.onclose = NO_OP;
+      this.conn.onclose = NO_OP
       if (code) {
-        this.conn.close(code, reason || '');
+        this.conn.close(code, reason || "")
       } else {
-        this.conn.close();
+        this.conn.close()
       }
-      this.conn = null;
+      this.conn = null
     }
-    return callback && callback();
-  }.bind(socket);
+    return callback && callback()
+  }.bind(socket)
 
   socket.realDisconnect = function disconnect(callback, code, reason) {
-    this.reconnectTimer.reset();
-    this.disconnect(callback, code, reason);
-  }.bind(socket);
+    this.reconnectTimer.reset()
+    this.disconnect(callback, code, reason)
+  }.bind(socket)
 }
