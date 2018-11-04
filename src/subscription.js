@@ -5,11 +5,15 @@ export class Subscription {
     this.bindings = {}
   }
 
-  setup() {
+  setup({ reconnectAlgorithm }) {
     if (!this.channel) {
       this.channel = this.pushEx.getSocket().channel(this.channelName)
       this.channel.join()
       this.channel.on("msg", this._handleMessage.bind(this))
+      this.channel.rejoinTimer = new this.channel.rejoinTimer.constructor(
+        () => this.channel.rejoinUntilConnected(),
+        reconnectAlgorithm
+      )
     }
 
     return this

@@ -4,16 +4,19 @@ import { Subscription } from "./subscription"
 const NO_OP = () => {}
 
 const DEFAULT_SOCKET_RECONNECT_ALGORITHM = tries => {
-  return [1000, 3000, 6000, 12000, 20000][tries - 1] || 30000
+  return [3000, 6000, 10000, 20000][tries - 1] || 30000
 }
 
+const DEFAULT_CHANNEL_RECONNECT_ALGORITHM = () => 5000
+
 export class Pushex {
-  constructor(url, { getParams, onConnect, onConnectionError, socketReconnectAlgorithm }) {
+  constructor(url, { getParams, onConnect, onConnectionError, socketReconnectAlgorithm, channelReconnectAlgorithm }) {
     if (!url) {
       throw new Error("URL is not valid")
     }
 
     this.reconnectAlgorithm = socketReconnectAlgorithm || DEFAULT_SOCKET_RECONNECT_ALGORITHM
+    this.channelReconnectAlgorithm = channelReconnectAlgorithm || DEFAULT_CHANNEL_RECONNECT_ALGORITHM
     this.getParams = getParams || (() => ({}))
     this.onConnect = onConnect || NO_OP
     this.onConnectionError = onConnectionError || NO_OP
@@ -62,10 +65,6 @@ export class Pushex {
     implementPhoenixBugfix(this.socket)
 
     this.socket.onOpen(() => {
-      this.socket.channels.forEach((ch) => {
-        ch.rejoinTimer.reset()
-        ch.rejoinTimer.scheduleTimeout()
-      })
       this.onConnect(this)
     })
 
