@@ -1,16 +1,11 @@
 import { Subscription } from './subscription'
 
-const DEFAULT_CHANNEL_RECONNECT_ALGORITHM = () => 5000
-
-class FakeTimer {}
-
 let mockChannel, mockSocket, mockPushEx
 
 beforeEach(() => {
   mockChannel = {
     join: jest.fn(),
     on: jest.fn(),
-    rejoinTimer: new FakeTimer()
   }
 
   mockSocket = {
@@ -25,26 +20,15 @@ beforeEach(() => {
 describe('setup', () => {
   it('creates/joins a channel through the socket', () => {
     const subscription = new Subscription('chName', { pushEx: mockPushEx })
-    expect(subscription.setup({ reconnectAlgorithm: DEFAULT_CHANNEL_RECONNECT_ALGORITHM })).toEqual(subscription)
+    expect(subscription.setup()).toEqual(subscription)
 
     expect(mockSocket.channel.mock.calls).toEqual([['chName']])
     expect(mockChannel.join.mock.calls).toEqual([[]])
   })
 
-  it('redefines the reconnectTimer to work around slow reconnects', () => {
-    const rejoinTimer = mockChannel.rejoinTimer
-    rejoinTimer.sentinel = true
-
-    const subscription = new Subscription('chName', { pushEx: mockPushEx })
-    subscription.setup({ reconnectAlgorithm: DEFAULT_CHANNEL_RECONNECT_ALGORITHM })
-
-    expect(mockChannel.rejoinTimer).not.toEqual(rejoinTimer)
-    expect(mockChannel.rejoinTimer).toEqual(expect.any(FakeTimer))
-  })
-
   it('sets up the msg callback of the channel', () => {
     const subscription = new Subscription('chName', { pushEx: mockPushEx })
-    subscription.setup({ reconnectAlgorithm: DEFAULT_CHANNEL_RECONNECT_ALGORITHM })
+    subscription.setup()
 
     expect(mockChannel.on.mock.calls).toEqual([['msg', expect.any(Function)]])
   })
@@ -53,7 +37,7 @@ describe('setup', () => {
 describe('msg handler', () => {
   it('runs all bindings for the event', () => {
     const subscription = new Subscription('chName', { pushEx: mockPushEx })
-    subscription.setup({ reconnectAlgorithm: DEFAULT_CHANNEL_RECONNECT_ALGORITHM })
+    subscription.setup()
 
     let called = ''
     subscription.bind('event', () => called += 'a')
@@ -72,7 +56,7 @@ describe('msg handler', () => {
 
   it('runs * bindings as all messages', () => {
     const subscription = new Subscription('chName', { pushEx: mockPushEx })
-    subscription.setup({ reconnectAlgorithm: DEFAULT_CHANNEL_RECONNECT_ALGORITHM })
+    subscription.setup()
 
     let called = ''
     subscription.bind('event', () => called += 'a')
@@ -92,7 +76,7 @@ describe('msg handler', () => {
   it('swallows errors into a timeout to allow future subscriptions to be invoked while preserving the error stack', () => {
     jest.useFakeTimers()
     const subscription = new Subscription('chName', { pushEx: mockPushEx })
-    subscription.setup({ reconnectAlgorithm: DEFAULT_CHANNEL_RECONNECT_ALGORITHM })
+    subscription.setup()
 
     let called = ''
     subscription.bind('event', () => called += 'a')
@@ -111,7 +95,7 @@ describe('msg handler', () => {
 
   it('can remove bindings', () => {
     const subscription = new Subscription('chName', { pushEx: mockPushEx })
-    subscription.setup({ reconnectAlgorithm: DEFAULT_CHANNEL_RECONNECT_ALGORITHM })
+    subscription.setup()
 
     let called = ''
     const unsubA = subscription.bind('event', () => called += 'a')
