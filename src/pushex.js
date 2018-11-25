@@ -14,7 +14,7 @@ export class Pushex {
     }
 
     this.reconnectAlgorithm = socketReconnectAlgorithm || DEFAULT_SOCKET_RECONNECT_ALGORITHM
-    this.getParams = getParams || (() => ({}))
+    this.getParams = getParams || (() => Promise.resolve({}))
     this.onConnect = onConnect || NO_OP
     this.onConnectionError = onConnectionError || NO_OP
     this.subscriptions = {}
@@ -28,12 +28,14 @@ export class Pushex {
   }
 
   disconnect() {
-    this.socket.disconnect()
+    return new Promise((resolve) => {
+      this.socket.disconnect(() => resolve())
+    })
   }
 
   resetParams() {
     return this.getParams().then(params => {
-      this.socket.params = params
+      this.socket.params = () => params
       return this
     })
   }
