@@ -28,7 +28,7 @@ export class Pushex {
   }
 
   disconnect() {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.socket.disconnect(() => resolve())
     })
   }

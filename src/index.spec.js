@@ -1,5 +1,5 @@
-import { Pushex } from './index'
+import { Pushex } from "./index"
 
-it('exports Pushex', () => {
+it("exports Pushex", () => {
   expect(Pushex).toBeDefined()
 })
