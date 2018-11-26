@@ -8,7 +8,7 @@ const DEFAULT_SOCKET_RECONNECT_ALGORITHM = tries => {
 }
 
 export class Pushex {
-  constructor(url, { getParams, onConnect, onConnectionError, socketReconnectAlgorithm, channelReconnectAlgorithm }) {
+  constructor(url, { getParams, onConnect, onConnectionError, socketReconnectAlgorithm }) {
     if (!url) {
       throw new Error("URL is not valid")
     }
