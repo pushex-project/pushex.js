@@ -22,7 +22,7 @@ npm install --save pushex
 - [Pushex#constructor/2](#pushexconstructor)
 - [Pushex#connect/0](#pushexconnect)
 - [Pushex#disconnect/0](#pushexdisconnect)
-- [Pushex#resetParams/0](#pushexresetParams)
+- [Pushex#resetParams/0](#pushexresetparams)
 - [Pushex#subscribe/1](#pushexsubscribe)
 - [Subscription#bind/2](#subscriptionbind)
 
