@@ -5,8 +5,9 @@
   "private": true,
   "main": "dist/main.js",
   "scripts": {
-    "build": "webpack --mode=production",
+    "build": "npm run pretty:check && webpack --mode=production",
     "pretty": "prettier src/**/*.js --write",
+    "pretty:check": "prettier src/**/*.js -l",
     "test": "jest",
     "test:watch": "jest --watch"
   },
