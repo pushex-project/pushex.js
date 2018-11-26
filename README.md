@@ -56,6 +56,10 @@ const pushex = new Pushex('wss://example.myserver.com/push_socket', {
 })
 ```
 
+## Authentication
+
+All authentication / authorization occurs on your hosted server running PushEx during the lifecycle points `socket_connect` and `channel_join`.
+
 ## Methods
 
 All public methods are detailed below.
@@ -123,7 +127,3 @@ const unsub = pushex.subscribe('myCh').bind('*', myCallback)
 unsub()
 // myCallback will not be invoked through this callback
 ```
-
-## Authentication
-
-All authentication / authorization occurs on your hosted server running PushEx during the lifecycle points `socket_connect` and `channel_join`.
