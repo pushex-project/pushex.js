@@ -19,12 +19,12 @@ npm install --save pushex
 
 ## Documentation ToC
 
-- [Pushex#constructor](#Pushex#constructor)
-- [Pushex#connect](#Pushex#connect)
-- [Pushex#disconnect](#Pushex#disconnect)
-- [Pushex#resetParams](#Pushex#resetParams)
-- [Pushex#subscribe](#Pushex#subscribe)
-- [Subscription#bind](#Subscription#bind)
+- [Pushex#constructor](#Pushexconstructor)
+- [Pushex#connect](#Pushexconnect)
+- [Pushex#disconnect](#Pushexdisconnect)
+- [Pushex#resetParams](#PushexresetParams)
+- [Pushex#subscribe](#Pushexsubscribe)
+- [Subscription#bind](#Subscriptionbind)
 
 ## Usage
 
