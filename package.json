@@ -12,15 +12,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SalesLoft/pushex.js.git"
+    "url": "git+https://github.com/pushex-project/pushex.js.git"
   },
   "keywords": [],
-  "author": "SalesLoft, Steve Bussey",
+  "author": "Steve Bussey",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/SalesLoft/pushex.js/issues"
+    "url": "https://github.com/pushex-project/pushex.js/issues"
   },
-  "homepage": "https://github.com/SalesLoft/pushex.js#readme",
+  "homepage": "https://github.com/pushex-project/pushex.js#readme",
   "devDependencies": {
     "@babel/core": "^7.1.6",
     "@babel/preset-env": "^7.1.0",
