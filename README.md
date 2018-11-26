@@ -7,4 +7,4 @@ JS client to the server.
 
 - [Hexdocs.pm](https://hexdocs.pm/push_ex)
 - [Pushex Github](https://github.com/pushex-project/pushex)
-- [Pushex.js npm](https://www.npmjs.com/package/pushex.js)
+- [Pushex.js npm](https://www.npmjs.com/package/pushex)
