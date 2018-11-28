@@ -1,5 +1,9 @@
 # Pushex.js
 
+[![npm](https://img.shields.io/npm/v/pushex.svg)](https://npmjs.com/package/pushex)
+[![Hex.pm](https://img.shields.io/hexpm/l/push_ex.svg)](https://github.com/pushex-project/pushex.js/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/pushex-project/pushex.js.svg?branch=master)](https://travis-ci.org/pushex-project/pushex.js)
+
 [PushEx](https://github.com/pushex-project/pushex) is an Elixir based push-only websocket implementation. Pushex.js is the
 JS client to the server.
 
