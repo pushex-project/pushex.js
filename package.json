@@ -34,5 +34,11 @@
   },
   "dependencies": {
     "phoenix": "^1.4.0"
-  }
+  },
+  "files": [
+    "dist",
+    "src",
+    "CHANGELOG.md",
+    "README.md"
+  ]
 }
