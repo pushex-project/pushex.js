@@ -121,7 +121,7 @@ A subscription channel can have events bound to it, with the callbackFn being in
 
 In order to capture all events on a given cahnnel, use the special channelName `'*'`. The callbackFn will be invoked on every channel event, regardless of the name.
 
-The `callbackFn` is invoked as `callbackFn(event, data)`.
+The `callbackFn` is invoked as `callbackFn(data, event)`.
 
 `bind` returns a function which can be used to unsubscribe the event:
 

@@ -27,8 +27,8 @@ export class Subscription {
   // private
 
   _handleMessage({ data, event }) {
-    this._runBindings(event, [event, data])
-    this._runBindings("*", [event, data])
+    this._runBindings(event, [data, event])
+    this._runBindings("*", [data, event])
   }
 
   _runBindings(eventName, args) {
