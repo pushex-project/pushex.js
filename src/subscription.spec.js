@@ -39,18 +39,25 @@ describe("msg handler", () => {
     const subscription = new Subscription("chName", { pushEx: mockPushEx })
     subscription.setup()
 
+    const args = []
     let called = ""
-    subscription.bind("event", () => (called += "a"))
+    subscription.bind("event", (data, event) => {
+      args.push([data, event])
+      (called += "a")
+    })
+
     subscription.bind("event", () => (called += "b"))
     subscription.bind("eventx", () => fail("should not match"))
 
-    mockChannel.on.mock.calls[0][1]({ data: "fake", event: "event" })
+    mockChannel.on.mock.calls[0][1]({ data: "data", event: "event" })
+    expect(args).toEqual([['data', 'event']])
     expect(called).toEqual("ab")
 
-    mockChannel.on.mock.calls[0][1]({ data: "fake", event: "event" })
+    mockChannel.on.mock.calls[0][1]({ data: "data", event: "event" })
+    expect(args).toEqual([['data', 'event'], ['data', 'event']])
     expect(called).toEqual("abab")
 
-    mockChannel.on.mock.calls[0][1]({ data: "fake", event: "nope" })
+    mockChannel.on.mock.calls[0][1]({ data: "data", event: "nope" })
     expect(called).toEqual("abab")
   })
 
@@ -58,18 +65,23 @@ describe("msg handler", () => {
     const subscription = new Subscription("chName", { pushEx: mockPushEx })
     subscription.setup()
 
+    const args = []
     let called = ""
     subscription.bind("event", () => (called += "a"))
-    subscription.bind("*", () => (called += "w"))
+    subscription.bind("*", (data, event) => {
+      args.push([data, event])
+      (called += "w")
+    })
     subscription.bind("eventx", () => fail("should not match"))
 
-    mockChannel.on.mock.calls[0][1]({ data: "fake", event: "event" })
+    mockChannel.on.mock.calls[0][1]({ data: "data", event: "event" })
+    expect(args).toEqual([['data', 'event']])
     expect(called).toEqual("aw")
 
-    mockChannel.on.mock.calls[0][1]({ data: "fake", event: "event" })
+    mockChannel.on.mock.calls[0][1]({ data: "data", event: "event" })
     expect(called).toEqual("awaw")
 
-    mockChannel.on.mock.calls[0][1]({ data: "fake", event: "only the wildcard" })
+    mockChannel.on.mock.calls[0][1]({ data: "data", event: "only the wildcard" })
     expect(called).toEqual("awaww")
   })
 
