@@ -1,6 +1,6 @@
 {
   "name": "pushex",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "JS client for PushEx (https://github.com/pushex-project/pushex)",
   "main": "dist/pushex.js",
   "scripts": {
