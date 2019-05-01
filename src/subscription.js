@@ -41,8 +41,12 @@ export class Subscription {
     }
   }
 
-  unbindAll(eventName) {
+  unbind(eventName) {
     this.bindings[eventName] = []
+  }
+
+  unbindAll() {
+    this.bindings = {}
   }
 
   // private

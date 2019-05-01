@@ -127,22 +127,42 @@ describe("msg handler", () => {
   })
 })
 
-describe("unbindAll", () => {
+describe("unbind", () => {
   it("works with no existing bindings", () => {
     const subscription = new Subscription("chName", { pushEx: mockPushEx })
     expect(subscription.bindings["test"]).toEqual(undefined)
-    subscription.unbindAll("test")
+    subscription.unbind("test")
     expect(subscription.bindings["test"]).toEqual([])
+  })
+
+  it("removes all current bindings for this event only", () => {
+    const subscription = new Subscription("chName", { pushEx: mockPushEx })
+    expect(subscription.bindings["test"]).toEqual(undefined)
+    const unsubA = subscription.bind("test", () => (called += "a"))
+    const unsubB = subscription.bind("test", () => (called += "b"))
+    const other = subscription.bind("other", () => (called += "c"))
+    expect(subscription.bindings["test"].length).toEqual(2)
+    subscription.unbind("test")
+    expect(subscription.bindings["test"]).toEqual([])
+    expect(subscription.bindings["other"].length).toEqual(1)
+  })
+})
+
+describe("unbindAll", () => {
+  it("works with no existing bindings", () => {
+    const subscription = new Subscription("chName", { pushEx: mockPushEx })
+    expect(subscription.bindings).toEqual({})
+    subscription.unbindAll()
+    expect(subscription.bindings).toEqual({})
   })
 
   it("removes all current bindings", () => {
     const subscription = new Subscription("chName", { pushEx: mockPushEx })
     expect(subscription.bindings["test"]).toEqual(undefined)
     const unsubA = subscription.bind("test", () => (called += "a"))
-    const unsubB = subscription.bind("test", () => (called += "b"))
-    expect(subscription.bindings["test"].length).toEqual(2)
-    subscription.unbindAll("test")
-    expect(subscription.bindings["test"]).toEqual([])
+    const unsubB = subscription.bind("other", () => (called += "b"))
+    subscription.unbindAll()
+    expect(subscription.bindings).toEqual({})
   })
 })
 

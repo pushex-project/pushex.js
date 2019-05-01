@@ -40,13 +40,17 @@ export class Pushex {
     })
   }
 
+  getExistingSubscription(channelName) {
+    return this.subscriptions[channelName]
+  }
+
   subscribe(channelName) {
-    if (!this.subscriptions[channelName]) {
+    if (!this.getExistingSubscription(channelName)) {
       const subscription = new Subscription(channelName, { pushEx: this })
       this.subscriptions[channelName] = subscription
     }
 
-    return this.subscriptions[channelName].setup()
+    return this.getExistingSubscription(channelName).setup()
   }
 
   unsubscribe(channelName) {

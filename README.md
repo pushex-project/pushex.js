@@ -29,8 +29,10 @@ npm install --save pushex
 - [Pushex#resetParams/0](#pushexresetparams)
 - [Pushex#subscribe/1](#pushexsubscribe)
 - [Pushex#unsubscribe/1](#pushexunsubscribe)
+- [Pushex#getExistingSubscription/1](#pushexgetexistingsubscription)
 - [Subscription#bind/2](#subscriptionbind)
-- [Subscription#unbindAll/1](#subscriptionunbindall)
+- [Subscription#unbind/1](#subscriptionunbind)
+- [Subscription#unbindAll/0](#subscriptionunbindall)
 
 ## Usage
 
@@ -121,6 +123,14 @@ unsubscribe(channelName)
 
 If a Subscription exists for this name it will be left gracefully and closed. The subscription is removed from the list of PushEx subscriptions so that calling `subscribe/1` again will create a new Subscription. This resolves a promise because you are not guaranteed the Subscription is closed until a message is delivered to the server.
 
+### Pushex#getExistingSubscription
+
+```js
+getExistingSubscription(channelName)
+```
+
+Returns the subscription if it already exists. Does not create a new subscription.
+
 ### Subscription#bind
 
 ```js
@@ -142,10 +152,18 @@ unsub()
 // myCallback will not be invoked through this callback
 ```
 
-### Subscription#unbindAll
+### Subscription#unbind
 
 ```js
 unbindAll(eventName)
 ```
 
 All event bindings for the provided name will be removed. The Subscription still remains open and alive, so you could rebind events and it would work.
+
+### Subscription#unbindAll
+
+```js
+unbindAll()
+```
+
+All event bindings for the entire subscription will be removed. The Subscription still remains open and alive, so you could rebind events and it would work.
