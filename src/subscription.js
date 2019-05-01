@@ -18,7 +18,8 @@ export class Subscription {
   close() {
     return new Promise((resolve, reject) => {
       if (this.channel) {
-        this.channel.leave()
+        this.channel
+          .leave()
           .receive("ok", () => {
             this.channel = null
             resolve()

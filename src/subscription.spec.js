@@ -160,7 +160,7 @@ describe("close", () => {
     return receiveMock
   }
 
-  it("resolves once closed", (done) => {
+  it("resolves once closed", done => {
     const subscription = new Subscription("chName", { pushEx: mockPushEx })
     subscription.setup()
 
@@ -170,7 +170,7 @@ describe("close", () => {
     subscription.close().then(done)
   })
 
-  it("rejects if error", (done) => {
+  it("rejects if error", done => {
     const subscription = new Subscription("chName", { pushEx: mockPushEx })
     subscription.setup()
 
@@ -180,7 +180,7 @@ describe("close", () => {
     subscription.close().catch(done)
   })
 
-  it("rejects if timeout", (done) => {
+  it("rejects if timeout", done => {
     const subscription = new Subscription("chName", { pushEx: mockPushEx })
     subscription.setup()
 
@@ -190,7 +190,7 @@ describe("close", () => {
     subscription.close().catch(done)
   })
 
-  it("resolves without a channel", (done) => {
+  it("resolves without a channel", done => {
     const subscription = new Subscription("chName", { pushEx: mockPushEx })
     subscription.close().then(done)
   })

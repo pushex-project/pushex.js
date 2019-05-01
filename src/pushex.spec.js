@@ -136,14 +136,14 @@ describe("subscribe", () => {
 })
 
 describe("unsubscribe", () => {
-  it("resolves when there isn't an existing subscription", (done) => {
+  it("resolves when there isn't an existing subscription", done => {
     const pushex = new Pushex("wss://test.com", {})
     pushex.unsubscribe("chName").then(() => {
       done()
     })
   })
 
-  it("closes an existing subscription", (done) => {
+  it("closes an existing subscription", done => {
     const pushex = new Pushex("wss://test.com", {})
     const sub = pushex.subscribe("chName")
 
