@@ -28,7 +28,9 @@ npm install --save pushex
 - [Pushex#disconnect/0](#pushexdisconnect)
 - [Pushex#resetParams/0](#pushexresetparams)
 - [Pushex#subscribe/1](#pushexsubscribe)
+- [Pushex#unsubscribe/1](#pushexunsubscribe)
 - [Subscription#bind/2](#subscriptionbind)
+- [Subscription#unbindAll/1](#subscriptionunbindall)
 
 ## Usage
 
@@ -111,6 +113,14 @@ subscribe(channelName)
 
 This is the main interface to accessing push data. A Subscription will be created and memoized for future usage. The `channelName` is used to connect as a Phoenix channel. In PushEx, any channel name you want to use is valid, and the authorization layer can be used to deny invalid channels.
 
+### Pushex#unsubscribe
+
+```js
+unsubscribe(channelName)
+```
+
+If a Subscription exists for this name it will be left gracefully and closed. The subscription is removed from the list of PushEx subscriptions so that calling `subscribe/1` again will create a new Subscription. This resolves a promise because you are not guaranteed the Subscription is closed until a message is delivered to the server.
+
 ### Subscription#bind
 
 ```js
@@ -131,3 +141,11 @@ const unsub = pushex.subscribe('myCh').bind('*', myCallback)
 unsub()
 // myCallback will not be invoked through this callback
 ```
+
+### Subscription#unbindAll
+
+```js
+unbindAll(eventName)
+```
+
+All event bindings for the provided name will be removed. The Subscription still remains open and alive, so you could rebind events and it would work.
