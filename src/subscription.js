@@ -5,6 +5,14 @@ export class Subscription {
     this.bindings = {}
   }
 
+  hasBindings() {
+    return (
+      Object.keys(this.bindings).filter(key => {
+        return this.bindings[key].length > 0
+      }).length > 0
+    )
+  }
+
   setup() {
     if (!this.channel) {
       this.channel = this.pushEx.getSocket().channel(this.channelName)

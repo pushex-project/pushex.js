@@ -33,6 +33,7 @@ npm install --save pushex
 - [Subscription#bind/2](#subscriptionbind)
 - [Subscription#unbind/1](#subscriptionunbind)
 - [Subscription#unbindAll/0](#subscriptionunbindall)
+- [Subscription#hasBindings/0](#subscriptionhasbindings)
 
 ## Usage
 
@@ -167,3 +168,11 @@ unbindAll()
 ```
 
 All event bindings for the entire subscription will be removed. The Subscription still remains open and alive, so you could rebind events and it would work.
+
+### Subscription#hasBindings
+
+```js
+hasBindings()
+```
+
+Returns true/false indicating whether there are active bindings for this subscription.

@@ -215,3 +215,92 @@ describe("close", () => {
     subscription.close().then(done)
   })
 })
+
+describe("hasBindings", () => {
+  it("is false by default", () => {
+    const subscription = new Subscription("chName", { pushEx: mockPushEx })
+    subscription.setup()
+
+    expect(subscription.hasBindings()).toEqual(false)
+  })
+
+  it("is true with a binding", () => {
+    const subscription = new Subscription("chName", { pushEx: mockPushEx })
+    subscription.setup()
+
+    const unsub = subscription.bind("other", () => (called += "b"))
+
+    expect(subscription.hasBindings()).toEqual(true)
+  })
+
+  it("is false after unbinding", () => {
+    const subscription = new Subscription("chName", { pushEx: mockPushEx })
+    subscription.setup()
+
+    const unsub = subscription.bind("other", () => (called += "b"))
+
+    expect(subscription.hasBindings()).toEqual(true)
+
+    unsub()
+
+    expect(subscription.hasBindings()).toEqual(false)
+  })
+
+  it("is false after unbindAll", () => {
+    const subscription = new Subscription("chName", { pushEx: mockPushEx })
+    subscription.setup()
+
+    const unsub = subscription.bind("other", () => (called += "b"))
+
+    expect(subscription.hasBindings()).toEqual(true)
+
+    subscription.unbindAll()
+
+    expect(subscription.hasBindings()).toEqual(false)
+  })
+
+  it("is false after unbind/1", () => {
+    const subscription = new Subscription("chName", { pushEx: mockPushEx })
+    subscription.setup()
+
+    const unsub = subscription.bind("other", () => (called += "b"))
+
+    expect(subscription.hasBindings()).toEqual(true)
+
+    subscription.unbind("other")
+
+    expect(subscription.hasBindings()).toEqual(false)
+  })
+
+  it("is true after unbinding a single function but there's more", () => {
+    const subscription = new Subscription("chName", { pushEx: mockPushEx })
+    subscription.setup()
+
+    const unsub = subscription.bind("other", () => (called += "b"))
+    const unsubB = subscription.bind("other", () => (called += "b"))
+
+    expect(subscription.hasBindings()).toEqual(true)
+
+    unsub()
+
+    expect(subscription.hasBindings()).toEqual(true)
+  })
+
+  it("is true after unbinding a single function but there's more in another event", () => {
+    const subscription = new Subscription("chName", { pushEx: mockPushEx })
+    subscription.setup()
+
+    const unsub = subscription.bind("a", () => (called += "b"))
+    const unsubB = subscription.bind("other", () => (called += "b"))
+
+    expect(subscription.hasBindings()).toEqual(true)
+
+    unsub()
+
+    expect(subscription.hasBindings()).toEqual(true)
+
+    unsubB()
+
+    expect(subscription.hasBindings()).toEqual(false)
+  })
+})
