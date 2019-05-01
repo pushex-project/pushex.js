@@ -5,7 +5,8 @@ let mockChannel, mockSocket, mockPushEx
 beforeEach(() => {
   mockChannel = {
     join: jest.fn(),
-    on: jest.fn()
+    on: jest.fn(),
+    leave: jest.fn()
   }
 
   mockSocket = {
@@ -123,5 +124,74 @@ describe("msg handler", () => {
 
     mockChannel.on.mock.calls[0][1]({ data: "fake", event: "event" })
     expect(called).toEqual("aba")
+  })
+})
+
+describe("unbindAll", () => {
+  it("works with no existing bindings", () => {
+    const subscription = new Subscription("chName", { pushEx: mockPushEx })
+    expect(subscription.bindings["test"]).toEqual(undefined)
+    subscription.unbindAll("test")
+    expect(subscription.bindings["test"]).toEqual([])
+  })
+
+  it("removes all current bindings", () => {
+    const subscription = new Subscription("chName", { pushEx: mockPushEx })
+    expect(subscription.bindings["test"]).toEqual(undefined)
+    const unsubA = subscription.bind("test", () => (called += "a"))
+    const unsubB = subscription.bind("test", () => (called += "b"))
+    expect(subscription.bindings["test"].length).toEqual(2)
+    subscription.unbindAll("test")
+    expect(subscription.bindings["test"]).toEqual([])
+  })
+})
+
+describe("close", () => {
+  function generateReceiveMock(eventToCallback) {
+    const receiveMock = {
+      receive: (event, fn) => {
+        if (event === eventToCallback) {
+          fn()
+        }
+
+        return receiveMock
+      }
+    }
+    return receiveMock
+  }
+
+  it("resolves once closed", (done) => {
+    const subscription = new Subscription("chName", { pushEx: mockPushEx })
+    subscription.setup()
+
+    const receiveMock = generateReceiveMock("ok")
+    mockChannel.leave.mockReturnValue(receiveMock)
+
+    subscription.close().then(done)
+  })
+
+  it("rejects if error", (done) => {
+    const subscription = new Subscription("chName", { pushEx: mockPushEx })
+    subscription.setup()
+
+    const receiveMock = generateReceiveMock("error")
+    mockChannel.leave.mockReturnValue(receiveMock)
+
+    subscription.close().catch(done)
+  })
+
+  it("rejects if timeout", (done) => {
+    const subscription = new Subscription("chName", { pushEx: mockPushEx })
+    subscription.setup()
+
+    const receiveMock = generateReceiveMock("timeout")
+    mockChannel.leave.mockReturnValue(receiveMock)
+
+    subscription.close().catch(done)
+  })
+
+  it("resolves without a channel", (done) => {
+    const subscription = new Subscription("chName", { pushEx: mockPushEx })
+    subscription.close().then(done)
   })
 })
