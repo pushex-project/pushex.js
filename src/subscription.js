@@ -15,6 +15,23 @@ export class Subscription {
     return this
   }
 
+  close() {
+    return new Promise((resolve, reject) => {
+      if (this.channel) {
+        this.channel
+          .leave()
+          .receive("ok", () => {
+            this.channel = null
+            resolve()
+          })
+          .receive("error", reject)
+          .receive("timeout", reject)
+      } else {
+        resolve()
+      }
+    })
+  }
+
   bind(eventName, fn) {
     this.bindings[eventName] = this.bindings[eventName] || []
     this.bindings[eventName].push(fn)
@@ -22,6 +39,10 @@ export class Subscription {
     return () => {
       this.bindings[eventName] = this.bindings[eventName].filter(testFn => testFn !== fn)
     }
+  }
+
+  unbindAll(eventName) {
+    this.bindings[eventName] = []
   }
 
   // private

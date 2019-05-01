@@ -134,3 +134,26 @@ describe("subscribe", () => {
     expect(sub).not.toEqual(sub2)
   })
 })
+
+describe("unsubscribe", () => {
+  it("resolves when there isn't an existing subscription", done => {
+    const pushex = new Pushex("wss://test.com", {})
+    pushex.unsubscribe("chName").then(() => {
+      done()
+    })
+  })
+
+  it("closes an existing subscription", done => {
+    const pushex = new Pushex("wss://test.com", {})
+    const sub = pushex.subscribe("chName")
+
+    expect(pushex.subscriptions.chName).not.toEqual(undefined)
+    expect(sub.channel).not.toEqual(null)
+
+    pushex.unsubscribe("chName").then(() => {
+      expect(pushex.subscriptions).toEqual({})
+      expect(sub.channel).toEqual(null)
+      done()
+    })
+  })
+})

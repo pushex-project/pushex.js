@@ -49,6 +49,24 @@ export class Pushex {
     return this.subscriptions[channelName].setup()
   }
 
+  unsubscribe(channelName) {
+    return new Promise((resolve, reject) => {
+      if (this.subscriptions[channelName]) {
+        const subscription = this.subscriptions[channelName]
+
+        return subscription
+          .close()
+          .then(() => {
+            delete this.subscriptions[channelName]
+            resolve()
+          })
+          .catch(reject)
+      } else {
+        return resolve()
+      }
+    })
+  }
+
   getSocket() {
     return this.socket
   }
