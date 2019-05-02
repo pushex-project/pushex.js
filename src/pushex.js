@@ -55,9 +55,9 @@ export class Pushex {
 
   unsubscribe(channelName) {
     return new Promise((resolve, reject) => {
-      if (this.subscriptions[channelName]) {
-        const subscription = this.subscriptions[channelName]
+      const subscription = this.subscriptions[channelName]
 
+      if (subscription) {
         return subscription
           .close()
           .then(() => {
