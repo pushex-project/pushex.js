@@ -5,12 +5,13 @@
   "main": "dist/pushex.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "npm run pretty:check && webpack --mode=production && npm run generate-types",
-    "generate-types": "tsc --emitDeclarationOnly --outDir dist",
+    "build": "npm run pretty:check && webpack --mode=production && npm run types:generate",
     "pretty": "prettier src/**/*.{js,ts} --write",
     "pretty:check": "prettier src/**/*.{js,ts} -l",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "types:check": "tsc --noEmit",
+    "types:generate": "tsc --emitDeclarationOnly --outDir dist"
   },
   "repository": {
     "type": "git",
