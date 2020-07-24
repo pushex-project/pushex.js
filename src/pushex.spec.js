@@ -148,11 +148,11 @@ describe("unsubscribe", () => {
     const sub = pushex.subscribe("chName")
 
     expect(pushex.subscriptions.chName).not.toEqual(undefined)
-    expect(sub.channel).not.toEqual(null)
+    expect(sub.channel).not.toEqual(undefined)
 
     pushex.unsubscribe("chName").then(() => {
       expect(pushex.subscriptions).toEqual({})
-      expect(sub.channel).toEqual(null)
+      expect(sub.channel).toEqual(undefined)
       done()
     })
   })
