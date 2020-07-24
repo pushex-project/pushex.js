@@ -1,5 +1,15 @@
+import { Channel } from "phoenix"
+import { Pushex } from "./pushex"
+
+export type SubscriptionFunction<T = any> = (data: T, event: string) => void
+
 export class Subscription {
-  constructor(channelName, { pushEx }) {
+  private channelName: string
+  private pushEx: Pushex
+  private bindings: Record<string, SubscriptionFunction[]>
+  private channel?: Channel
+
+  constructor(channelName: string, { pushEx }: { pushEx: Pushex }) {
     this.channelName = channelName
     this.pushEx = pushEx
     this.bindings = {}
@@ -29,7 +39,7 @@ export class Subscription {
         this.channel
           .leave()
           .receive("ok", () => {
-            this.channel = null
+            this.channel = undefined
             resolve()
           })
           .receive("error", reject)
@@ -40,7 +50,7 @@ export class Subscription {
     })
   }
 
-  bind(eventName, fn) {
+  bind(eventName: string, fn: SubscriptionFunction) {
     this.bindings[eventName] = this.bindings[eventName] || []
     this.bindings[eventName].push(fn)
 
@@ -49,7 +59,7 @@ export class Subscription {
     }
   }
 
-  unbind(eventName) {
+  unbind(eventName: string) {
     this.bindings[eventName] = []
   }
 
@@ -59,19 +69,19 @@ export class Subscription {
 
   // private
 
-  _handleMessage({ data, event }) {
+  _handleMessage({ data, event }: { data: any; event: string }) {
     this._runBindings(event, [data, event])
     this._runBindings("*", [data, event])
   }
 
-  _runBindings(eventName, args) {
+  _runBindings(eventName: string, args: [any, string]) {
     const bindings = this.bindings[eventName] || []
     bindings.forEach(bindingFn => {
       this._invokeFunctionWithAsyncErrorHandling(bindingFn, args)
     })
   }
 
-  _invokeFunctionWithAsyncErrorHandling(fn, args) {
+  _invokeFunctionWithAsyncErrorHandling(fn: SubscriptionFunction, args: [any, string]) {
     try {
       fn.apply(fn, args)
     } catch (e) {
