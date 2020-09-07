@@ -19,7 +19,7 @@ it("uses a default reconnectAfterMs strategy", () => {
   expect(pushex.socket.reconnectAfterMs(7)).toEqual(30000)
 })
 
-it("invokes onConnect when the socket becomes connected", done => {
+it("invokes onConnect when the socket becomes connected", (done) => {
   const getParams = () => Promise.resolve({ a: 1 })
   const onConnect = () => {
     done()
@@ -32,7 +32,7 @@ it("invokes onConnect when the socket becomes connected", done => {
   })
 })
 
-it("invokes onConnectionError when the socket encounters an error", done => {
+it("invokes onConnectionError when the socket encounters an error", (done) => {
   const getParams = () => Promise.resolve({ a: 1 })
   const onConnectionError = () => {
     done()
@@ -136,23 +136,23 @@ describe("subscribe", () => {
 })
 
 describe("unsubscribe", () => {
-  it("resolves when there isn't an existing subscription", done => {
+  it("resolves when there isn't an existing subscription", (done) => {
     const pushex = new Pushex("wss://test.com", {})
     pushex.unsubscribe("chName").then(() => {
       done()
     })
   })
 
-  it("closes an existing subscription", done => {
+  it("closes an existing subscription", (done) => {
     const pushex = new Pushex("wss://test.com", {})
     const sub = pushex.subscribe("chName")
 
     expect(pushex.subscriptions.chName).not.toEqual(undefined)
-    expect(sub.channel).not.toEqual(null)
+    expect(sub.channel).not.toEqual(undefined)
 
     pushex.unsubscribe("chName").then(() => {
       expect(pushex.subscriptions).toEqual({})
-      expect(sub.channel).toEqual(null)
+      expect(sub.channel).toEqual(undefined)
       done()
     })
   })
