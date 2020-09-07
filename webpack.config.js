@@ -1,24 +1,28 @@
-const path = require('path');
-const webpack = require('webpack');
+const path = require("path")
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin")
 
 module.exports = {
-  entry: './src/index.js',
+  entry: "./src/index.ts",
   output: {
-    filename: 'pushex.js',
-    path: path.resolve(__dirname, 'dist'),
-    library: 'Pushex',
-    libraryTarget: 'umd',
+    filename: "pushex.js",
+    path: path.resolve(__dirname, "dist"),
+    library: "Pushex",
+    libraryTarget: "umd"
   },
-  devtool: 'cheap-module-source-map',
+  devtool: "cheap-module-source-map",
+  resolve: {
+    extensions: [".ts", ".js"]
+  },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.[jt]s$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader'
+          loader: "babel-loader"
         }
       }
     ]
-  }
-};
+  },
+  plugins: [new ForkTsCheckerWebpackPlugin()]
+}

@@ -6,9 +6,8 @@ node_js:
 script:
   - npm run pretty:check
   - npm test
+  - npm run types:check
 
 branches:
   only:
     - master
-
-
