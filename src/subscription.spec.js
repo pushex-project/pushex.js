@@ -6,15 +6,15 @@ beforeEach(() => {
   mockChannel = {
     join: jest.fn(),
     on: jest.fn(),
-    leave: jest.fn()
+    leave: jest.fn(),
   }
 
   mockSocket = {
-    channel: jest.fn(() => mockChannel)
+    channel: jest.fn(() => mockChannel),
   }
 
   mockPushEx = {
-    getSocket: jest.fn(() => mockSocket)
+    getSocket: jest.fn(() => mockSocket),
   }
 })
 
@@ -54,7 +54,10 @@ describe("msg handler", () => {
     expect(called).toEqual("ab")
 
     mockChannel.on.mock.calls[0][1]({ data: "data", event: "event" })
-    expect(args).toEqual([["data", "event"], ["data", "event"]])
+    expect(args).toEqual([
+      ["data", "event"],
+      ["data", "event"],
+    ])
     expect(called).toEqual("abab")
 
     mockChannel.on.mock.calls[0][1]({ data: "data", event: "nope" })
@@ -175,12 +178,12 @@ describe("close", () => {
         }
 
         return receiveMock
-      }
+      },
     }
     return receiveMock
   }
 
-  it("resolves once closed", done => {
+  it("resolves once closed", (done) => {
     const subscription = new Subscription("chName", { pushEx: mockPushEx })
     subscription.setup()
 
@@ -190,7 +193,7 @@ describe("close", () => {
     subscription.close().then(done)
   })
 
-  it("rejects if error", done => {
+  it("rejects if error", (done) => {
     const subscription = new Subscription("chName", { pushEx: mockPushEx })
     subscription.setup()
 
@@ -200,7 +203,7 @@ describe("close", () => {
     subscription.close().catch(done)
   })
 
-  it("rejects if timeout", done => {
+  it("rejects if timeout", (done) => {
     const subscription = new Subscription("chName", { pushEx: mockPushEx })
     subscription.setup()
 
@@ -210,7 +213,7 @@ describe("close", () => {
     subscription.close().catch(done)
   })
 
-  it("resolves without a channel", done => {
+  it("resolves without a channel", (done) => {
     const subscription = new Subscription("chName", { pushEx: mockPushEx })
     subscription.close().then(done)
   })

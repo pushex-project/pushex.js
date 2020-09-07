@@ -19,10 +19,7 @@ export class Pushex {
   private socket!: Socket
   private config: PushexConfig
 
-  constructor(
-    url: string,
-    config: PushexConfig
-  ) {
+  constructor(url: string, config: PushexConfig) {
     if (!url) {
       throw new Error("URL is not valid")
     }
@@ -31,7 +28,7 @@ export class Pushex {
       getParams: config.getParams || (() => Promise.resolve({})),
       onConnect: config.onConnect || NO_OP,
       onConnectionError: config.onConnectionError || NO_OP,
-      socketReconnectAlgorithm: config.socketReconnectAlgorithm || DEFAULT_SOCKET_RECONNECT_ALGORITHM
+      socketReconnectAlgorithm: config.socketReconnectAlgorithm || DEFAULT_SOCKET_RECONNECT_ALGORITHM,
     }
 
     this.subscriptions = {}
@@ -45,7 +42,7 @@ export class Pushex {
   }
 
   public disconnect() {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.socket.disconnect(() => resolve())
     })
   }
@@ -55,7 +52,7 @@ export class Pushex {
    * is less friendly when the parameters are provided asynchronously.
    */
   public resetParams() {
-    return this.config.getParams().then(params => {
+    return this.config.getParams().then((params) => {
       // @ts-ignore Acknowledged interaction with a private attribute, unlikely to change upstream
       this.socket.params = () => params
       return this
@@ -69,7 +66,7 @@ export class Pushex {
   public subscribe(channelName: string) {
     if (!this.getExistingSubscription(channelName)) {
       const subscription = new Subscription(channelName, {
-        pushEx: this
+        pushEx: this,
       })
 
       this.subscriptions[channelName] = subscription
@@ -104,7 +101,7 @@ export class Pushex {
 
   private setupSocket(url: string) {
     this.socket = new Socket(url, {
-      reconnectAfterMs: this.config.socketReconnectAlgorithm
+      reconnectAfterMs: this.config.socketReconnectAlgorithm,
     })
 
     this.socket.onOpen(() => {

@@ -17,7 +17,7 @@ export class Subscription {
 
   public hasBindings() {
     return (
-      Object.keys(this.bindings).filter(key => {
+      Object.keys(this.bindings).filter((key) => {
         return this.bindings[key].length > 0
       }).length > 0
     )
@@ -28,7 +28,7 @@ export class Subscription {
     this.bindings[eventName].push(fn)
 
     return () => {
-      this.bindings[eventName] = this.bindings[eventName].filter(testFn => testFn !== fn)
+      this.bindings[eventName] = this.bindings[eventName].filter((testFn) => testFn !== fn)
     }
   }
 
@@ -78,7 +78,7 @@ export class Subscription {
 
   private runBindings(eventName: string, args: [any, string]) {
     const bindings = this.bindings[eventName] || []
-    bindings.forEach(bindingFn => {
+    bindings.forEach((bindingFn) => {
       this.invokeFunctionWithAsyncErrorHandling(bindingFn, args)
     })
   }
