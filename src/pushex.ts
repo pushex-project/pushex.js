@@ -35,16 +35,16 @@ export class Pushex {
     }
 
     this.subscriptions = {}
-    this._setupSocket(url)
+    this.setupSocket(url)
   }
 
-  connect() {
+  public connect() {
     return this.resetParams().then(() => {
       this.socket.connect()
     })
   }
 
-  disconnect() {
+  public disconnect() {
     return new Promise(resolve => {
       this.socket.disconnect(() => resolve())
     })
@@ -54,7 +54,7 @@ export class Pushex {
    * This function exists in order to provide a promise interface to params. Phoenix's params closure
    * is less friendly when the parameters are provided asynchronously.
    */
-  resetParams() {
+  public resetParams() {
     return this.config.getParams().then(params => {
       // @ts-ignore Acknowledged interaction with a private attribute, unlikely to change upstream
       this.socket.params = () => params
@@ -62,11 +62,11 @@ export class Pushex {
     })
   }
 
-  getExistingSubscription(channelName: string) {
+  public getExistingSubscription(channelName: string) {
     return this.subscriptions[channelName]
   }
 
-  subscribe(channelName: string) {
+  public subscribe(channelName: string) {
     if (!this.getExistingSubscription(channelName)) {
       const subscription = new Subscription(channelName, {
         pushEx: this
@@ -78,7 +78,7 @@ export class Pushex {
     return this.getExistingSubscription(channelName).setup()
   }
 
-  unsubscribe(channelName: string): Promise<void> {
+  public unsubscribe(channelName: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const subscription = this.subscriptions[channelName]
 
@@ -96,13 +96,13 @@ export class Pushex {
     })
   }
 
-  getSocket() {
+  public getSocket() {
     return this.socket
   }
 
   // private
 
-  _setupSocket(url: string) {
+  private setupSocket(url: string) {
     this.socket = new Socket(url, {
       reconnectAfterMs: this.config.socketReconnectAlgorithm
     })

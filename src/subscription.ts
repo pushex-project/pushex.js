@@ -15,7 +15,7 @@ export class Subscription {
     this.bindings = {}
   }
 
-  hasBindings() {
+  public hasBindings() {
     return (
       Object.keys(this.bindings).filter(key => {
         return this.bindings[key].length > 0
@@ -23,17 +23,36 @@ export class Subscription {
     )
   }
 
-  setup() {
+  public bind(eventName: string, fn: SubscriptionFunction) {
+    this.bindings[eventName] = this.bindings[eventName] || []
+    this.bindings[eventName].push(fn)
+
+    return () => {
+      this.bindings[eventName] = this.bindings[eventName].filter(testFn => testFn !== fn)
+    }
+  }
+
+  public unbind(eventName: string) {
+    this.bindings[eventName] = []
+  }
+
+  public unbindAll() {
+    this.bindings = {}
+  }
+
+  // Public, but for internal use
+  public setup() {
     if (!this.channel) {
       this.channel = this.pushEx.getSocket().channel(this.channelName)
       this.channel.join()
-      this.channel.on("msg", this._handleMessage.bind(this))
+      this.channel.on("msg", this.handleMessage.bind(this))
     }
 
     return this
   }
 
-  close() {
+  // Public, but for internal use
+  public close() {
     return new Promise((resolve, reject) => {
       if (this.channel) {
         this.channel
@@ -50,38 +69,21 @@ export class Subscription {
     })
   }
 
-  bind(eventName: string, fn: SubscriptionFunction) {
-    this.bindings[eventName] = this.bindings[eventName] || []
-    this.bindings[eventName].push(fn)
-
-    return () => {
-      this.bindings[eventName] = this.bindings[eventName].filter(testFn => testFn !== fn)
-    }
-  }
-
-  unbind(eventName: string) {
-    this.bindings[eventName] = []
-  }
-
-  unbindAll() {
-    this.bindings = {}
-  }
-
   // private
 
-  _handleMessage({ data, event }: { data: any; event: string }) {
-    this._runBindings(event, [data, event])
-    this._runBindings("*", [data, event])
+  private handleMessage({ data, event }: { data: any; event: string }) {
+    this.runBindings(event, [data, event])
+    this.runBindings("*", [data, event])
   }
 
-  _runBindings(eventName: string, args: [any, string]) {
+  private runBindings(eventName: string, args: [any, string]) {
     const bindings = this.bindings[eventName] || []
     bindings.forEach(bindingFn => {
-      this._invokeFunctionWithAsyncErrorHandling(bindingFn, args)
+      this.invokeFunctionWithAsyncErrorHandling(bindingFn, args)
     })
   }
 
-  _invokeFunctionWithAsyncErrorHandling(fn: SubscriptionFunction, args: [any, string]) {
+  private invokeFunctionWithAsyncErrorHandling(fn: SubscriptionFunction, args: [any, string]) {
     try {
       fn.apply(fn, args)
     } catch (e) {
