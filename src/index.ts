@@ -1,2 +1,2 @@
 export { Pushex } from "./pushex"
-export { SubscriptionFunction } from "./subscription"
+export type { SubscriptionFunction } from "./subscription"
