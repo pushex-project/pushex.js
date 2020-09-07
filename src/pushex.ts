@@ -50,9 +50,13 @@ export class Pushex {
     })
   }
 
+  /**
+   * This function exists in order to provide a promise interface to params. Phoenix's params closure
+   * is less friendly when the parameters are provided asynchronously.
+   */
   resetParams() {
-    return this.getParams().then(params => {
-      // @ts-ignore
+    return this.config.getParams().then(params => {
+      // @ts-ignore Acknowledged interaction with a private attribute, unlikely to change upstream
       this.socket.params = () => params
       return this
     })
