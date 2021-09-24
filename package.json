@@ -1,6 +1,6 @@
 {
   "name": "pushex",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "JS client for PushEx (https://github.com/pushex-project/pushex)",
   "main": "dist/pushex.js",
   "types": "dist/index.d.ts",
@@ -40,7 +40,7 @@
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
-    "phoenix": "^1.4.3"
+    "phoenix": "^1.5.13"
   },
   "files": [
     "dist",
