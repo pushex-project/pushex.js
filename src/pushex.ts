@@ -15,7 +15,7 @@ export type PushexConfig = {
 }
 
 export class Pushex {
-  private subscriptions: Record<string, Subscription>
+  private subscriptions: Record<string, Subscription> = {}
   private socket!: Socket
   private config: Required<PushexConfig>
 
@@ -31,7 +31,6 @@ export class Pushex {
       socketReconnectAlgorithm: config.socketReconnectAlgorithm || DEFAULT_SOCKET_RECONNECT_ALGORITHM,
     }
 
-    this.subscriptions = {}
     this.setupSocket(url)
   }
 
@@ -42,7 +41,7 @@ export class Pushex {
   }
 
   public disconnect() {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       this.socket.disconnect(() => resolve())
     })
   }
