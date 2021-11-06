@@ -7,17 +7,17 @@ const DEFAULT_SOCKET_RECONNECT_ALGORITHM = (tries: number) => {
   return [3000, 6000, 10000, 20000][tries - 1] || 30000
 }
 
-type PushexConfig = {
-  getParams: () => Promise<Record<string, any>>
-  onConnect: (instance: Pushex) => void
-  onConnectionError: (instance: Pushex) => void
-  socketReconnectAlgorithm: typeof DEFAULT_SOCKET_RECONNECT_ALGORITHM
+export type PushexConfig = {
+  getParams?: () => Promise<Record<string, any>>
+  onConnect?: (instance: Pushex) => void
+  onConnectionError?: (instance: Pushex) => void
+  socketReconnectAlgorithm?: typeof DEFAULT_SOCKET_RECONNECT_ALGORITHM
 }
 
 export class Pushex {
-  private subscriptions: Record<string, Subscription>
+  private subscriptions: Record<string, Subscription> = {}
   private socket!: Socket
-  private config: PushexConfig
+  private config: Required<PushexConfig>
 
   constructor(url: string, config: PushexConfig) {
     if (!url) {
@@ -31,7 +31,6 @@ export class Pushex {
       socketReconnectAlgorithm: config.socketReconnectAlgorithm || DEFAULT_SOCKET_RECONNECT_ALGORITHM,
     }
 
-    this.subscriptions = {}
     this.setupSocket(url)
   }
 
@@ -42,7 +41,7 @@ export class Pushex {
   }
 
   public disconnect() {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       this.socket.disconnect(() => resolve())
     })
   }

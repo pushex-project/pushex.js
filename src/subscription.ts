@@ -53,7 +53,7 @@ export class Subscription {
 
   // Public, but for internal use
   public close() {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       if (this.channel) {
         this.channel
           .leave()
