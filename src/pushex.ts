@@ -15,7 +15,7 @@ export type PushexConfig = {
 }
 
 export class Pushex {
-  private subscriptions: Record<string, Subscription> = {}
+  private subscriptions: Record<string, Subscription>
   private socket!: Socket
   private config: Required<PushexConfig>
 
@@ -23,6 +23,8 @@ export class Pushex {
     if (!url) {
       throw new Error("URL is not valid")
     }
+
+    this.subscriptions = {}
 
     this.config = {
       getParams: config.getParams || (() => Promise.resolve({})),
