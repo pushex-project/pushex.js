@@ -7,7 +7,8 @@ module.exports = {
     filename: "pushex.js",
     path: path.resolve(__dirname, "dist"),
     library: "Pushex",
-    libraryTarget: "umd"
+    libraryTarget: "umd",
+    globalObject: "globalThis",
   },
   devtool: "cheap-module-source-map",
   resolve: {
