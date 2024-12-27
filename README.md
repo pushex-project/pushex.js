@@ -47,7 +47,7 @@ This class can be used to create an instance of Pushex. Each instance of Pushex 
 
 ```js
 const pushex = new Pushex('wss://example.myserver.com/push_socket', {})
-pushex.subscribe('user-1').bind('*', (event, data) => {
+pushex.subscribe('user-1').bind('*', (data, event) => {
   console.log('user-1 channel received event/data', event, data)
 })
 ```
